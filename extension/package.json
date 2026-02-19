@@ -1,0 +1,499 @@
+{
+  "name": "clang-tidy-vscode",
+  "displayName": "%ext.displayName%",
+  "description": "%ext.description%",
+  "version": "0.1.1",
+  "publisher": "Aleksandr Loshkarev <mailbox@aloshkarev.com>",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aloshkarev/vsx-tidy"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": ["Other"],
+  "activationEvents": [
+    "onStartupFinished",
+    "onLanguage:c",
+    "onLanguage:cpp",
+    "onCommand:clangTidy.runFile",
+    "onCommand:clangTidy.runFileQuick",
+    "onCommand:clangTidy.runFileFull",
+    "onCommand:clangTidy.runProject",
+    "onCommand:clangTidy.runProjectQuick",
+    "onCommand:clangTidy.runProjectFull",
+    "onCommand:clangTidy.runProjectDiff",
+    "onCommand:clangTidy.openCompileCommands",
+    "onCommand:clangTidy.generateCompileCommandsHelp",
+    "onCommand:clangTidy.selectCompileCommands",
+    "onCommand:clangTidy.showCategories",
+    "onCommand:clangTidy.openFinding",
+    "onCommand:clangTidy.nextFinding",
+    "onCommand:clangTidy.prevFinding",
+    "onCommand:clangTidy.setFindingsFilter",
+    "onCommand:clangTidy.clearFindingsFilter",
+    "onCommand:clangTidy.filterByCategoryAtCursor",
+    "onCommand:clangTidy.filterByCheckAtCursor",
+    "onCommand:clangTidy.showChecks",
+    "onCommand:clangTidy.setBaseline",
+    "onCommand:clangTidy.clearBaseline",
+    "onCommand:clangTidy.restorePersistedResults",
+    "onCommand:clangTidy.fixAllProjectDryRun",
+    "onCommand:clangTidy.fixAllProjectApply",
+    "onView:clangTidy.findings",
+    "onCommand:clangTidy.stop",
+    "onCommand:clangTidy.restartDaemon",
+    "onCommand:clangTidy.diagnoseEnvironment"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {"command": "clangTidy.runFile", "title": "%command.runFile%"},
+      {"command": "clangTidy.runFileQuick", "title": "%command.runFileQuick%"},
+      {"command": "clangTidy.runFileFull", "title": "%command.runFileFull%"},
+      {"command": "clangTidy.runProject", "title": "%command.runProject%"},
+      {"command": "clangTidy.runProjectQuick", "title": "%command.runProjectQuick%"},
+      {"command": "clangTidy.runProjectFull", "title": "%command.runProjectFull%"},
+      {"command": "clangTidy.runProjectDiff", "title": "%command.runProjectDiff%"},
+      {"command": "clangTidy.openCompileCommands", "title": "%command.openCompileCommands%"},
+      {"command": "clangTidy.generateCompileCommandsHelp", "title": "%command.generateCompileCommandsHelp%"},
+      {"command": "clangTidy.selectCompileCommands", "title": "%command.selectCompileCommands%"},
+      {"command": "clangTidy.showCategories", "title": "%command.showCategories%"},
+      {"command": "clangTidy.nextFinding", "title": "%command.nextFinding%"},
+      {"command": "clangTidy.prevFinding", "title": "%command.prevFinding%"},
+      {"command": "clangTidy.setFindingsFilter", "title": "%command.setFindingsFilter%"},
+      {"command": "clangTidy.clearFindingsFilter", "title": "%command.clearFindingsFilter%"},
+      {"command": "clangTidy.filterByCategoryAtCursor", "title": "%command.filterByCategoryAtCursor%"},
+      {"command": "clangTidy.filterByCheckAtCursor", "title": "%command.filterByCheckAtCursor%"},
+      {"command": "clangTidy.showChecks", "title": "%command.showChecks%"},
+      {"command": "clangTidy.setBaseline", "title": "%command.setBaseline%"},
+      {"command": "clangTidy.clearBaseline", "title": "%command.clearBaseline%"},
+      {"command": "clangTidy.restorePersistedResults", "title": "%command.restorePersistedResults%"},
+      {"command": "clangTidy.fixAllProjectDryRun", "title": "%command.fixAllProjectDryRun%"},
+      {"command": "clangTidy.fixAllProjectApply", "title": "%command.fixAllProjectApply%"},
+      {"command": "clangTidy.stop", "title": "%command.stop%"},
+      {"command": "clangTidy.restartDaemon", "title": "%command.restartDaemon%"},
+      {"command": "clangTidy.diagnoseEnvironment", "title": "%command.diagnoseEnvironment%"}
+    ],
+    "views": {
+      "explorer": [
+        {
+          "id": "clangTidy.findings",
+          "name": "%view.findings%"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "%config.title%",
+      "properties": {
+        "clangTidy.onSave": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.onSave%"
+        },
+        "clangTidy.clangTidyPath": {
+          "type": "string",
+          "default": "clang-tidy",
+          "description": "%config.clangTidyPath%"
+        },
+        "clangTidy.compileCommandsPath": {
+          "type": "string",
+          "default": "",
+          "description": "%config.compileCommandsPath%"
+        },
+        "clangTidy.extraArgs": {
+          "type": "array",
+          "default": [],
+          "items": {"type": "string"},
+          "description": "%config.extraArgs%"
+        },
+        "clangTidy.maxWorkers": {
+          "type": "number",
+          "default": 4,
+          "minimum": 1,
+          "description": "%config.maxWorkers%"
+        },
+        "clangTidy.onSaveMode": {
+          "type": "string",
+          "enum": ["quick", "full"],
+          "default": "quick",
+          "description": "%config.onSaveMode%"
+        },
+        "clangTidy.onType": {
+          "type": "boolean",
+          "default": false,
+          "description": "%config.onType%"
+        },
+        "clangTidy.onTypeMode": {
+          "type": "string",
+          "enum": ["quick", "full"],
+          "default": "quick",
+          "description": "%config.onTypeMode%"
+        },
+        "clangTidy.onTypeDebounceMs": {
+          "type": "number",
+          "default": 400,
+          "minimum": 0,
+          "description": "%config.onTypeDebounceMs%"
+        },
+        "clangTidy.fallbackToCli": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.fallbackToCli%"
+        },
+        "clangTidy.manualMode": {
+          "type": "string",
+          "enum": ["quick", "full"],
+          "default": "full",
+          "description": "%config.manualMode%"
+        },
+        "clangTidy.quickChecks": {
+          "type": "string",
+          "default": "clang-diagnostic-*",
+          "description": "%config.quickChecks%"
+        },
+        "clangTidy.searchExcludeDirs": {
+          "type": "array",
+          "default": [".git", "node_modules", ".vscode"],
+          "items": {"type": "string"},
+          "description": "%config.searchExcludeDirs%"
+        },
+        "clangTidy.searchDepth": {
+          "type": "number",
+          "default": 6,
+          "minimum": 1,
+          "description": "%config.searchDepth%"
+        },
+        "clangTidy.autoDetectPlugins": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.autoDetectPlugins%"
+        },
+        "clangTidy.pluginPaths": {
+          "type": "array",
+          "default": [],
+          "items": {"type": "string"},
+          "description": "%config.pluginPaths%"
+        },
+        "clangTidy.pluginSearchDepth": {
+          "type": "number",
+          "default": 4,
+          "minimum": 1,
+          "description": "%config.pluginSearchDepth%"
+        },
+        "clangTidy.pluginNameHints": {
+          "type": "array",
+          "default": ["tidy", "clang"],
+          "items": {"type": "string"},
+          "description": "%config.pluginNameHints%"
+        },
+        "clangTidy.minVersion": {
+          "type": "number",
+          "default": 12,
+          "minimum": 0,
+          "description": "%config.minVersion%"
+        },
+        "clangTidy.daemonPath": {
+          "type": "string",
+          "default": "",
+          "description": "%config.daemonPath%"
+        },
+        "clangTidy.categoryRules": {
+          "type": "array",
+          "default": [
+            {"pattern": "performance-", "category": "performance"},
+            {"pattern": "readability-", "category": "readability"},
+            {"pattern": "bugprone-", "category": "bugprone"},
+            {"pattern": "modernize-", "category": "modernize"},
+            {"pattern": "security-", "category": "security"},
+            {"pattern": "cert-", "category": "security"},
+            {"pattern": "portability-", "category": "portability"},
+            {"pattern": "cppcoreguidelines-", "category": "cppcoreguidelines"},
+            {"pattern": "hicpp-", "category": "cppcoreguidelines"},
+            {"pattern": "clang-diagnostic-", "category": "clang-diagnostic"},
+            {"pattern": "clang-analyzer-", "category": "clang-diagnostic"},
+            {"pattern": "misc-", "category": "misc"},
+            {"pattern": "google-", "category": "readability"},
+            {"pattern": "llvm-", "category": "readability"}
+          ],
+          "items": {
+            "type": "object",
+            "required": ["pattern", "category"],
+            "properties": {
+              "pattern": {"type": "string"},
+              "category": {
+                "type": "string",
+                "enum": [
+                  "performance",
+                  "readability",
+                  "bugprone",
+                  "modernize",
+                  "security",
+                  "portability",
+                  "cppcoreguidelines",
+                  "clang-diagnostic",
+                  "misc",
+                  "other"
+                ]
+              },
+              "kind": {"type": "string", "enum": ["prefix", "regex"]}
+            }
+          },
+          "description": "%config.categoryRules%"
+        },
+        "clangTidy.categoryColors": {
+          "type": "object",
+          "default": {
+            "performance": {
+              "background": "rgba(255, 152, 0, 0.18)",
+              "border": "rgba(255, 152, 0, 0.6)",
+              "overviewRuler": "rgba(255, 152, 0, 0.9)"
+            },
+            "readability": {
+              "background": "rgba(66, 165, 245, 0.18)",
+              "border": "rgba(66, 165, 245, 0.6)",
+              "overviewRuler": "rgba(66, 165, 245, 0.9)"
+            },
+            "bugprone": {
+              "background": "rgba(244, 67, 54, 0.18)",
+              "border": "rgba(244, 67, 54, 0.6)",
+              "overviewRuler": "rgba(244, 67, 54, 0.9)"
+            },
+            "modernize": {
+              "background": "rgba(0, 188, 212, 0.18)",
+              "border": "rgba(0, 188, 212, 0.6)",
+              "overviewRuler": "rgba(0, 188, 212, 0.9)"
+            },
+            "security": {
+              "background": "rgba(233, 30, 99, 0.18)",
+              "border": "rgba(233, 30, 99, 0.6)",
+              "overviewRuler": "rgba(233, 30, 99, 0.9)"
+            },
+            "portability": {
+              "background": "rgba(121, 85, 72, 0.18)",
+              "border": "rgba(121, 85, 72, 0.6)",
+              "overviewRuler": "rgba(121, 85, 72, 0.9)"
+            },
+            "cppcoreguidelines": {
+              "background": "rgba(76, 175, 80, 0.18)",
+              "border": "rgba(76, 175, 80, 0.6)",
+              "overviewRuler": "rgba(76, 175, 80, 0.9)"
+            },
+            "clang-diagnostic": {
+              "background": "rgba(158, 158, 158, 0.18)",
+              "border": "rgba(158, 158, 158, 0.6)",
+              "overviewRuler": "rgba(158, 158, 158, 0.9)"
+            },
+            "misc": {
+              "background": "rgba(255, 214, 0, 0.18)",
+              "border": "rgba(255, 214, 0, 0.6)",
+              "overviewRuler": "rgba(255, 214, 0, 0.9)"
+            },
+            "other": {
+              "background": "rgba(120, 144, 156, 0.18)",
+              "border": "rgba(120, 144, 156, 0.6)",
+              "overviewRuler": "rgba(120, 144, 156, 0.9)"
+            }
+          },
+          "description": "%config.categoryColors%"
+        },
+        "clangTidy.showCategoryLabels": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.showCategoryLabels%"
+        },
+        "clangTidy.updateDebounceMs": {
+          "type": "number",
+          "default": 150,
+          "minimum": 0,
+          "description": "%config.updateDebounceMs%"
+        },
+        "clangTidy.maxDiagnosticsPerFile": {
+          "type": "number",
+          "default": 1000,
+          "minimum": 0,
+          "description": "%config.maxDiagnosticsPerFile%"
+        },
+        "clangTidy.maxFixesPerFile": {
+          "type": "number",
+          "default": 300,
+          "minimum": 0,
+          "description": "%config.maxFixesPerFile%"
+        },
+        "clangTidy.maxTotalDiagnostics": {
+          "type": "number",
+          "default": 50000,
+          "minimum": 0,
+          "description": "%config.maxTotalDiagnostics%"
+        },
+        "clangTidy.failSafeTotalDiagnostics": {
+          "type": "number",
+          "default": 75000,
+          "minimum": 0,
+          "description": "%config.failSafeTotalDiagnostics%"
+        },
+        "clangTidy.failSafeAutoCancel": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.failSafeAutoCancel%"
+        },
+        "clangTidy.failSafeDisableDecorations": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.failSafeDisableDecorations%"
+        },
+        "clangTidy.findingsPageSize": {
+          "type": "number",
+          "default": 200,
+          "minimum": 0,
+          "description": "%config.findingsPageSize%"
+        },
+        "clangTidy.baselineEnabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "%config.baselineEnabled%"
+        },
+        "clangTidy.projectBatchSize": {
+          "type": "number",
+          "default": 250,
+          "minimum": 0,
+          "description": "%config.projectBatchSize%"
+        },
+        "clangTidy.projectDiffOnly": {
+          "type": "boolean",
+          "default": false,
+          "description": "%config.projectDiffOnly%"
+        },
+        "clangTidy.projectDiffIncludeUntracked": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.projectDiffIncludeUntracked%"
+        },
+        "clangTidy.projectIncremental": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.projectIncremental%"
+        },
+        "clangTidy.projectPrioritizeActive": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.projectPrioritizeActive%"
+        },
+        "clangTidy.projectPrioritizeOpen": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.projectPrioritizeOpen%"
+        },
+        "clangTidy.projectAdaptiveBatching": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.projectAdaptiveBatching%"
+        },
+        "clangTidy.projectAdaptiveMinBatchSize": {
+          "type": "number",
+          "default": 25,
+          "minimum": 1,
+          "description": "%config.projectAdaptiveMinBatchSize%"
+        },
+        "clangTidy.projectAdaptiveBackoffFactor": {
+          "type": "number",
+          "default": 0.5,
+          "minimum": 0.1,
+          "maximum": 1,
+          "description": "%config.projectAdaptiveBackoffFactor%"
+        },
+        "clangTidy.showSummaryStatus": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.showSummaryStatus%"
+        },
+        "clangTidy.persistResults": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.persistResults%"
+        },
+        "clangTidy.autoLoadPersistedOnStartup": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.autoLoadPersistedOnStartup%"
+        },
+        "clangTidy.persistDebounceMs": {
+          "type": "number",
+          "default": 500,
+          "minimum": 0,
+          "description": "%config.persistDebounceMs%"
+        },
+        "clangTidy.daemonCacheOnDisk": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.daemonCacheOnDisk%"
+        },
+        "clangTidy.daemonAutoRestart": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.daemonAutoRestart%"
+        },
+        "clangTidy.daemonRestartMaxAttempts": {
+          "type": "number",
+          "default": 3,
+          "minimum": 0,
+          "description": "%config.daemonRestartMaxAttempts%"
+        },
+        "clangTidy.daemonRestartDelayMs": {
+          "type": "number",
+          "default": 1500,
+          "minimum": 0,
+          "description": "%config.daemonRestartDelayMs%"
+        },
+        "clangTidy.daemonHealthCheckIntervalMs": {
+          "type": "number",
+          "default": 20000,
+          "minimum": 0,
+          "description": "%config.daemonHealthCheckIntervalMs%"
+        },
+        "clangTidy.daemonCacheDir": {
+          "type": "string",
+          "default": "",
+          "description": "%config.daemonCacheDir%"
+        },
+        "clangTidy.perFileTimeoutMs": {
+          "type": "number",
+          "default": 0,
+          "minimum": 0,
+          "description": "%config.perFileTimeoutMs%"
+        },
+        "clangTidy.publishDiagnosticsThrottleMs": {
+          "type": "number",
+          "default": 0,
+          "minimum": 0,
+          "description": "%config.publishDiagnosticsThrottleMs%"
+        },
+        "clangTidy.useUnsavedBuffer": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.useUnsavedBuffer%"
+        },
+        "clangTidy.unsavedBufferMaxBytes": {
+          "type": "number",
+          "default": 1000000,
+          "minimum": 0,
+          "description": "%config.unsavedBufferMaxBytes%"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "tsc -p ./",
+    "watch": "tsc -w -p ./",
+    "lint": "echo 'no lint configured'"
+  },
+  "dependencies": {
+    "vscode-nls": "^5.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "typescript": "^5.3.0",
+    "vscode": "^1.1.37"
+  }
+}

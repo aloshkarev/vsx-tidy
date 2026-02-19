@@ -1,0 +1,10 @@
+**/.DS_Store
+**/src/**
+**/tsconfig.json
+**/node_modules/**
+!**/node_modules/vscode-nls/**
+**/*.map
+**/.vscode/**
+../daemon/**
+../docs/**
+../scripts/**

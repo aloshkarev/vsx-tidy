@@ -1,0 +1,23 @@
+[package]
+name = "clang-tidy-daemon"
+version = "0.1.0"
+edition = "2021"
+authors = ["Alexander Loshkarev <mailbox@aloshkarev.com>"]
+description = "A daemon for the Clang-Tidy VS Code extension"
+license = "MIT"
+repository = "https://github.com/aloshkarev/vsx-tidy"
+homepage = "https://github.com/aloshkarev/vsx-tidy"
+documentation = "https://github.com/aloshkarev/vsx-tidy/blob/main/docs/PROTOCOL.md"
+keywords = ["clang-tidy", "vscode", "extension", "daemon"]
+categories = ["Development Tools"]
+
+[dependencies]
+anyhow = "1.0"
+regex = "1.10"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+serde_yaml = "0.9"
+tempfile = "3.10"
+url = "2.5"
+walkdir = "2.5"
+threadpool = "1.8"
